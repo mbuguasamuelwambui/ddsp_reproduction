@@ -8,6 +8,7 @@ Compares Full DDSP against:
 """
 
 import os
+import sys
 import glob
 import argparse
 import time
@@ -16,10 +17,19 @@ import torch
 import librosa
 from tabulate import tabulate
 
-from src.model import DDSPAutoencoder
-from src.baselines import ClassicalSourceFilterVocoder, HarmonicOnlyDDSP, NoiseOnlyDDSP
-from src.data import AudioFeatureExtractor
-from src.metrics import DDPSEvaluator
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+
+try:
+    from src.model import DDSPAutoencoder
+    from src.baselines import ClassicalSourceFilterVocoder, HarmonicOnlyDDSP, NoiseOnlyDDSP
+    from src.data import AudioFeatureExtractor
+    from src.metrics import DDPSEvaluator
+except ImportError:
+    from model import DDSPAutoencoder
+    from baselines import ClassicalSourceFilterVocoder, HarmonicOnlyDDSP, NoiseOnlyDDSP
+    from data import AudioFeatureExtractor
+    from metrics import DDPSEvaluator
 
 
 def run_comparative_benchmark(args):

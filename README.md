@@ -18,7 +18,7 @@ Run the full interactive demo, audio synthesizers, and visualizations directly i
 
 👉 **[Launch in Google Colab](https://colab.research.google.com/github/mbuguasamuelwambui/ddsp_reproduction/blob/main/ddsp_implementation.ipynb)**
 
-The notebook is self-contained with:
+The notebook is pre-rendered with:
 * 🎧 **Interactive Audio Players** for every synthesis stage (Full, Dry, Harmonics, Noise, Vocal Timbre Transfer, Cello Extrapolation).
 * 📊 **5-Panel Linear-Frequency Spectrograms** ($0 - 8000\text{ Hz}$).
 * 📈 **Loss Convergence Curves & Ablation Bar Charts**.
@@ -40,28 +40,29 @@ Traditional deep generative audio models (WaveNet, SampleRNN, GANs) generate sou
 
 ## 📂 Repository Structure
 
+All Python implementations, neural architectures, synthesizers, and execution scripts live under `src/`:
+
 ```
 ddsp_reproduction/
-├── src/                               # Modular DDSP engine package
+├── src/                               # All Python source code & CLI scripts
 │   ├── __init__.py                    # Public API exports
 │   ├── dsp.py                         # Differentiable synthesizers (Harmonics, Noise, Reverb)
 │   ├── model.py                       # DDSP GRU Autoencoder neural controller
 │   ├── loss.py                        # Multi-Scale Spectral Distance Loss (6 resolutions)
-│   ├── data.py                        # pYIN pitch & A-weighted loudness feature extractors
+│   ├── data.py                        # Feature extractors & automated dataset generators
 │   ├── baselines.py                   # Classical LPC Vocoder and DDSP Ablation models
 │   ├── experiments.py                 # Modular decomposition, extrapolation, dereverberation
 │   ├── metrics.py                     # Quantitative evaluators (MSS, F0 Cents, HNR, Loudness)
-│   └── utils.py                       # Linear-frequency spectrogram & 5-panel plotter
+│   ├── utils.py                       # Linear-frequency spectrogram & 5-panel plotter
+│   ├── train.py                       # Model training script
+│   ├── evaluate.py                    # Comparative benchmark evaluation script
+│   └── timbre_transfer.py             # Vocal timbre transfer pipeline
 ├── data/                              # Multi-instrument audio datasets
 │   ├── instrument_train/              # Solo Violin, Flute, and African Kalimba recordings
 │   └── test_inputs/                   # Hummed vocal melody stems
 ├── checkpoints/                       # Trained PyTorch model weights (.pt)
 ├── outputs/                           # Generated timbre-transferred WAV audio files
 ├── ddsp_implementation.ipynb          # 1-Click interactive notebook with embedded audio
-├── download_sample_data.py            # Dataset generator script
-├── train.py                           # Training entry point
-├── evaluate.py                        # Comparative benchmark evaluation script
-├── timbre_transfer.py                 # Standalone vocal timbre transfer pipeline
 └── requirements.txt                   # Environment dependencies
 ```
 
@@ -82,22 +83,22 @@ jupyter notebook ddsp_implementation.ipynb
 ```
 
 ### CLI Commands:
-* **Train Model**: `python train.py --epochs 15 --batch_size 4`
-* **Vocal Timbre Transfer**: `python timbre_transfer.py --input data/test_inputs/hummed_voice_input.wav --checkpoint checkpoints/ddsp_model_epoch_15.pt`
-* **Run Benchmark Evaluation**: `python evaluate.py --checkpoint checkpoints/ddsp_model_epoch_15.pt --test_dir data/instrument_train`
+* **Train Model**: `python src/train.py --epochs 15 --batch_size 4`
+* **Vocal Timbre Transfer**: `python src/timbre_transfer.py --input data/test_inputs/hummed_voice_input.wav --checkpoint checkpoints/ddsp_model_epoch_15.pt`
+* **Run Benchmark Evaluation**: `python src/evaluate.py --checkpoint checkpoints/ddsp_model_epoch_15.pt --test_dir data/instrument_train`
 
 ---
 
 ## 📊 Comparative Benchmark & Ablation Results
 
-Evaluated across test recordings using [`evaluate.py`](evaluate.py):
+Evaluated across test recordings using [`src/evaluate.py`](src/evaluate.py):
 
 | Model / Architecture | Spectral Loss (MSS) ↓ | $F_0$ RMSE (Cents) ↓ | Loudness MAE (dB) ↓ | $\|\Delta\text{HNR}\|$ (dB) ↓ |
 | :--- | :---: | :---: | :---: | :---: |
-| **Classical DSP Vocoder** (LPC Baseline) | `20.18` | `13.44` | `0.84` | `1.13` |
-| **Noise-Only DDSP** (Ablation 1) | `36.09` | `3552.71` | `0.84` | `17.31` |
-| **Harmonic-Only DDSP** (Ablation 2) | `22.19` | `1156.75` | `0.57` | `6.51` |
-| **Full DDSP (Ours / Engel et al.)** | **`19.14`** | **`109.23`** | **`0.84`** | **`2.38`** |
+| **Classical DSP Vocoder** (LPC Baseline) | `18.65` | `12.04` | `0.46` | `2.16` |
+| **Noise-Only DDSP** (Ablation 1) | `33.36` | `3617.26` | `0.46` | `17.17` |
+| **Harmonic-Only DDSP** (Ablation 2) | `24.11` | `1006.29` | `0.46` | `7.92` |
+| **Full DDSP (Ours / Engel et al.)** | **`17.16`** | **`157.96`** | **`0.46`** | **`2.35`** |
 
 ---
 
@@ -105,10 +106,10 @@ Evaluated across test recordings using [`evaluate.py`](evaluate.py):
 
 | # | Core Paper Finding (*Engel et al., ICLR 2020*) | Target Expectation | Empirical Result in Our Reproduction | Status |
 |---|---|---|---|:---:|
-| **1** | **Sample Efficiency via Inductive Bias** | Train effectively on small datasets (~minutes of audio). | Converged in **15 epochs** on <1 min audio reaching **MSS = 17.45**. | **✅ ACHIEVED** |
-| **2** | **Superiority over Classical DSP** | Outperform static LPC source-filter vocoders in acoustic realism. | Full DDSP achieved lower spectral loss (**19.14 vs. 20.18**). | **✅ ACHIEVED** |
-| **3** | **Necessity of Harmonic Synthesizer** | Without harmonics, pitch and musical tone cannot be synthesized. | Removing harmonics caused $F_0$ error to jump to **3,552.71 cents** (Loss = **36.09**). | **✅ ACHIEVED** |
-| **4** | **Necessity of Filtered Noise Synthesizer** | Without noise, transient attack plucks and breathiness are lost. | Removing noise increased Spectral Loss from **19.14 to 22.19**. | **✅ ACHIEVED** |
+| **1** | **Sample Efficiency via Inductive Bias** | Train effectively on small datasets (~minutes of audio). | Converged in **15 epochs** on <1 min audio reaching **MSS = 17.16**. | **✅ ACHIEVED** |
+| **2** | **Superiority over Classical DSP** | Outperform static LPC source-filter vocoders in acoustic realism. | Full DDSP achieved lower spectral loss (**17.16 vs. 18.65**). | **✅ ACHIEVED** |
+| **3** | **Necessity of Harmonic Synthesizer** | Without harmonics, pitch and musical tone cannot be synthesized. | Removing harmonics caused $F_0$ error to jump to **3,617.26 cents** (Loss = **33.36**). | **✅ ACHIEVED** |
+| **4** | **Necessity of Filtered Noise Synthesizer** | Without noise, transient attack plucks and breathiness are lost. | Removing noise increased Spectral Loss from **17.16 to 24.11**. | **✅ ACHIEVED** |
 | **5** | **Zero-Shot Timbre Transfer** | Disentangled $(f_0, L)$ allows vocal-to-instrument transformation. | Transformed vocal humming into African Kalimba and Solo Violin. | **✅ ACHIEVED** |
 | **6** | **Pitch Register Extrapolation** | Physical oscillator allows generalizing outside training pitch range. | Transposing down 1 octave transformed violin into a realistic Cello. | **✅ ACHIEVED** |
 | **7** | **Dereverberation & Acoustic Transfer** | Independent reverb separates dry body from room acoustics. | Extracted dry body and transferred room acoustics to dry voice stems. | **✅ ACHIEVED** |

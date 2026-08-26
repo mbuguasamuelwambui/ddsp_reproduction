@@ -4,6 +4,7 @@ Trains the Differentiable Digital Signal Processing autoencoder on monophonic au
 """
 
 import os
+import sys
 import glob
 import argparse
 import time
@@ -11,10 +12,19 @@ import torch
 import torch.optim as optim
 from tqdm import tqdm
 
-from src.model import DDSPAutoencoder
-from src.loss import MultiScaleSpectralLoss
-from src.data import MonophonicAudioDataset, create_dataloader
-from src.utils import save_audio, plot_spectrogram_comparison
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+
+try:
+    from src.model import DDSPAutoencoder
+    from src.loss import MultiScaleSpectralLoss
+    from src.data import MonophonicAudioDataset, create_dataloader
+    from src.utils import save_audio, plot_spectrogram_comparison
+except ImportError:
+    from model import DDSPAutoencoder
+    from loss import MultiScaleSpectralLoss
+    from data import MonophonicAudioDataset, create_dataloader
+    from utils import save_audio, plot_spectrogram_comparison
 
 
 def train(args):

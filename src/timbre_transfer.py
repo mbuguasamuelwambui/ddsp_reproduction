@@ -5,15 +5,24 @@ into the target instrument's acoustic timbre using a trained DDSP model.
 """
 
 import os
+import sys
 import argparse
 import torch
 import numpy as np
 import soundfile as sf
 import librosa
 
-from src.model import DDSPAutoencoder
-from src.data import AudioFeatureExtractor
-from src.utils import save_audio, plot_spectrogram_comparison
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+
+try:
+    from src.model import DDSPAutoencoder
+    from src.data import AudioFeatureExtractor
+    from src.utils import save_audio, plot_spectrogram_comparison
+except ImportError:
+    from model import DDSPAutoencoder
+    from data import AudioFeatureExtractor
+    from utils import save_audio, plot_spectrogram_comparison
 
 
 def pitch_shift_f0(f0_hz: np.ndarray, semitones: float = 0.0, octave_shift: int = 0) -> np.ndarray:

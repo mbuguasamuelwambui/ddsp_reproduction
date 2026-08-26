@@ -6,7 +6,12 @@ Based on Engel et al., ICLR 2020 (https://github.com/magenta/ddsp)
 from .dsp import HarmonicOscillator, FilteredNoiseSynthesizer, DifferentiableReverb
 from .model import DDSPAutoencoder
 from .loss import MultiScaleSpectralLoss
-from .data import AudioFeatureExtractor, MonophonicAudioDataset, create_dataloader
+from .data import (
+    AudioFeatureExtractor,
+    MonophonicAudioDataset,
+    create_dataloader,
+    setup_all_datasets,
+)
 from .metrics import DDPSEvaluator
 from .baselines import ClassicalSourceFilterVocoder, HarmonicOnlyDDSP, NoiseOnlyDDSP
 from .experiments import (
@@ -32,6 +37,7 @@ __all__ = [
     "AudioFeatureExtractor",
     "MonophonicAudioDataset",
     "create_dataloader",
+    "setup_all_datasets",
     "DDPSEvaluator",
     "ClassicalSourceFilterVocoder",
     "HarmonicOnlyDDSP",
