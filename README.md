@@ -1,21 +1,35 @@
-# DDSP: Differentiable Digital Signal Processing (PyTorch Reproduction)
+# 🎻 DDSP: Differentiable Digital Signal Processing (PyTorch Reproduction)
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/mbuguasamuelwambui/ddsp_reproduction/blob/main/ddsp_implementation.ipynb)
 [![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.3.1-EE4C2C.svg)](https://pytorch.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A native PyTorch reproduction and experimental extension of the landmark ICLR 2020 paper:
+A native PyTorch reproduction and experimental evaluation of the landmark ICLR 2020 paper:
 > **DDSP: Differentiable Digital Signal Processing**  
 > *Jesse Engel, Lamtharn Hantrakul, Chenjie Gu, Adam Roberts* (Google Magenta)  
-> [Official Magenta Repository](https://github.com/magenta/ddsp) | [Online Supplement](https://storage.googleapis.com/ddsp/index.html) | [arXiv:2001.04643](https://arxiv.org/abs/2001.04643)
+> [Official Magenta Repository](https://github.com/magenta/ddsp) | [Online Supplement & Demos](https://storage.googleapis.com/ddsp/index.html) | [arXiv:2001.04643](https://arxiv.org/abs/2001.04643)
+
+---
+
+## ⚡ 1-Click Interactive Google Colab Demo
+
+Run the full interactive demo, audio synthesizers, and visualizations directly in your browser without any local setup:
+
+👉 **[Launch in Google Colab](https://colab.research.google.com/github/mbuguasamuelwambui/ddsp_reproduction/blob/main/ddsp_implementation.ipynb)**
+
+The notebook is self-contained with:
+* 🎧 **Interactive Audio Players** for every synthesis stage (Full, Dry, Harmonics, Noise, Vocal Timbre Transfer, Cello Extrapolation).
+* 📊 **5-Panel Linear-Frequency Spectrograms** ($0 - 8000\text{ Hz}$).
+* 📈 **Loss Convergence Curves & Ablation Bar Charts**.
 
 ---
 
 ## 📌 Project Overview
 
-Traditional deep generative audio models (WaveNet, SampleRNN, GANs) generate sound as raw discrete sample sequences without incorporating domain-specific acoustic physics. Consequently, they require tens of hours of training data, millions of parameters, and exhibit phase/pitch instability.
+Traditional deep generative audio models (WaveNet, SampleRNN, GANs) generate sound as raw discrete sample sequences without incorporating domain-specific acoustic physics. Consequently, they require massive datasets, millions of parameters, and exhibit phase and pitch instability.
 
-**DDSP integrates classical, interpretable DSP synthesizers directly into end-to-end differentiable neural networks:**
+**DDSP bridges deep learning and digital signal processing by embedding interpretable DSP building blocks directly into neural networks:**
 1. **Harmonic Additive Synthesizer**: Generates quasi-periodic sinusoidal banks with exact instantaneous phase integration and anti-aliasing constraints.
 2. **Filtered Noise Synthesizer**: Generates dynamic breath, friction, and pluck attack transients via frequency-domain FIR filtering.
 3. **Differentiable Reverb**: Learns acoustic space and room impulse response characteristics ($h(t)$).
@@ -43,7 +57,7 @@ ddsp_reproduction/
 │   └── test_inputs/                   # Hummed vocal melody stems
 ├── checkpoints/                       # Trained PyTorch model weights (.pt)
 ├── outputs/                           # Generated timbre-transferred WAV audio files
-├── ddsp_implementation.ipynb          # Step-by-step interactive notebook with embedded audio
+├── ddsp_implementation.ipynb          # 1-Click interactive notebook with embedded audio
 ├── download_sample_data.py            # Dataset generator script
 ├── train.py                           # Training entry point
 ├── evaluate.py                        # Comparative benchmark evaluation script
@@ -53,21 +67,24 @@ ddsp_reproduction/
 
 ---
 
-## 🚀 Quickstart Guide
+## 💻 Local Setup & Quickstart
 
-### 1. Installation
-Clone the repository and install dependencies:
 ```bash
+# 1. Clone the repository
 git clone https://github.com/mbuguasamuelwambui/ddsp_reproduction.git
 cd ddsp_reproduction
+
+# 2. Install dependencies
 pip install -r requirements.txt
+
+# 3. Launch the interactive notebook
+jupyter notebook ddsp_implementation.ipynb
 ```
 
-### 2. Run the Interactive Notebook
-Open [`ddsp_implementation.ipynb`](ddsp_implementation.ipynb) in VS Code or JupyterLab. The notebook is fully pre-rendered with:
-* 🎧 Embedded audio players for every synthesis stage.
-* 📊 5-panel linear-frequency log-magnitude spectrograms ($0 - 8000\text{ Hz}$).
-* 📈 Training loss curves, pitch extrapolation plots, and ablation bar charts.
+### CLI Commands:
+* **Train Model**: `python train.py --epochs 15 --batch_size 4`
+* **Vocal Timbre Transfer**: `python timbre_transfer.py --input data/test_inputs/hummed_voice_input.wav --checkpoint checkpoints/ddsp_model_epoch_15.pt`
+* **Run Benchmark Evaluation**: `python evaluate.py --checkpoint checkpoints/ddsp_model_epoch_15.pt --test_dir data/instrument_train`
 
 ---
 
@@ -84,7 +101,7 @@ Evaluated across test recordings using [`evaluate.py`](evaluate.py):
 
 ---
 
-## 🎯 Paper Findings Scorecard
+## 🎯 Paper Findings Scorecard: Empirical Verification
 
 | # | Core Paper Finding (*Engel et al., ICLR 2020*) | Target Expectation | Empirical Result in Our Reproduction | Status |
 |---|---|---|---|:---:|
@@ -99,31 +116,9 @@ Evaluated across test recordings using [`evaluate.py`](evaluate.py):
 
 ---
 
-## 💻 CLI Commands
+## 🙏 Acknowledgments & References
 
-### Train Model
-```bash
-python train.py --epochs 15 --batch_size 4
-```
-
-### Perform Timbre Transfer
-```bash
-python timbre_transfer.py --input data/test_inputs/hummed_voice_input.wav --checkpoint checkpoints/ddsp_model_epoch_15.pt --pitch_shift 0.0
-```
-
-### Run Comparative Evaluation
-```bash
-python evaluate.py --checkpoint checkpoints/ddsp_model_epoch_15.pt --test_dir data/instrument_train
-```
-
----
-
-## 📜 Citation
-```bibtex
-@inproceedings{engel2020ddsp,
-  title={DDSP: Differentiable Digital Signal Processing},
-  author={Jesse Engel and Lamtharn Hantrakul and Chenjie Gu and Adam Roberts},
-  booktitle={International Conference on Learning Representations (ICLR)},
-  year={2020}
-}
-```
+This codebase is a PyTorch reproduction and educational evaluation based on the original work by:
+* **Jesse Engel, Lamtharn Hantrakul, Chenjie Gu, Adam Roberts** — *DDSP: Differentiable Digital Signal Processing*, International Conference on Learning Representations (ICLR), 2020.
+* Original TensorFlow Implementation: [Google Magenta DDSP](https://github.com/magenta/ddsp)
+* Official Online Audio Supplement: [Google Magenta DDSP Demos](https://storage.googleapis.com/ddsp/index.html)
