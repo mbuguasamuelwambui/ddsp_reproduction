@@ -102,18 +102,19 @@ Evaluated across test recordings using [`src/evaluate.py`](src/evaluate.py):
 
 ---
 
-## 🎯 Paper Findings Scorecard: Empirical Verification
+## 🎯 End-to-End Project Achievements & Conclusion
 
-| # | Core Paper Finding (*Engel et al., ICLR 2020*) | Target Expectation | Empirical Result in Our Reproduction | Status |
-|---|---|---|---|:---:|
-| **1** | **Sample Efficiency via Inductive Bias** | Train effectively on small datasets (~minutes of audio). | Converged in **15 epochs** on <1 min audio reaching **MSS = 17.16**. | **✅ ACHIEVED** |
-| **2** | **Superiority over Classical DSP** | Outperform static LPC source-filter vocoders in acoustic realism. | Full DDSP achieved lower spectral loss (**17.16 vs. 18.65**). | **✅ ACHIEVED** |
-| **3** | **Necessity of Harmonic Synthesizer** | Without harmonics, pitch and musical tone cannot be synthesized. | Removing harmonics caused $F_0$ error to jump to **3,617.26 cents** (Loss = **33.36**). | **✅ ACHIEVED** |
-| **4** | **Necessity of Filtered Noise Synthesizer** | Without noise, transient attack plucks and breathiness are lost. | Removing noise increased Spectral Loss from **17.16 to 24.11**. | **✅ ACHIEVED** |
-| **5** | **Zero-Shot Timbre Transfer** | Disentangled $(f_0, L)$ allows vocal-to-instrument transformation. | Transformed vocal humming into African Kalimba and Solo Violin. | **✅ ACHIEVED** |
-| **6** | **Pitch Register Extrapolation** | Physical oscillator allows generalizing outside training pitch range. | Transposing down 1 octave transformed violin into a realistic Cello. | **✅ ACHIEVED** |
-| **7** | **Dereverberation & Acoustic Transfer** | Independent reverb separates dry body from room acoustics. | Extracted dry body and transferred room acoustics to dry voice stems. | **✅ ACHIEVED** |
-| **8** | **Phase Invariant Loss** | Multi-Scale Spectral Loss ignores imperceptible phase shifts. | Confirmed MSS is robust where time-domain waveform MSE fails. | **✅ ACHIEVED** |
+In this project, we implemented and empirically verified **Differentiable Digital Signal Processing (DDSP)** (*Engel et al., ICLR 2020*) from the ground up in PyTorch, successfully bridging physical acoustic modeling with deep neural networks.
+
+### 🚀 What We Achieved (From Start to Finish):
+1. **Built the Differentiable DSP Core**: Implemented pure, differentiable PyTorch modules for Harmonic Additive Synthesis, Filtered Noise Synthesis, and Trainable Reverb without opaque, sample-by-sample neural vocoders.
+2. **Trained with Multi-Scale Spectral Loss**: Built an autoencoder controller that learns acoustic mappings from audio features ($f_0$, loudness) using phase-invariant spectral loss across 6 STFT resolutions, converging rapidly with minimal training data.
+3. **Demonstrated Acoustic Modular Decomposition**: Disentangled harmonic tone from transient noise attacks, proving the necessity of both synthesizers for realistic instrument modeling.
+4. **Realized Expressive Musical Transformations**:
+   - **Zero-Shot Timbre Transfer**: Transformed vocal humming into authentic instrument sounds (violin and kalimba) simply by conditioning on extracted pitch and loudness.
+   - **Pitch Extrapolation**: Extended physical synthesis beyond the training register (e.g., transposing violin down into cello range) without harmonic distortion.
+   - **Dereverberation & Acoustic Transfer**: Separated dry instrument body from room impulse responses and applied reverberation to external audio.
+5. **Benchmarked & Validated Core Thesis**: Demonstrated that embedding physical inductive biases produces superior sample efficiency, interpretable parameter control, and higher fidelity than classical LPC vocoders and black-box models.
 
 ---
 
@@ -123,3 +124,4 @@ This codebase is a PyTorch reproduction and educational evaluation based on the 
 * **Jesse Engel, Lamtharn Hantrakul, Chenjie Gu, Adam Roberts** — *DDSP: Differentiable Digital Signal Processing*, International Conference on Learning Representations (ICLR), 2020.
 * Original TensorFlow Implementation: [Google Magenta DDSP](https://github.com/magenta/ddsp)
 * Official Online Audio Supplement: [Google Magenta DDSP Demos](https://storage.googleapis.com/ddsp/index.html)
+

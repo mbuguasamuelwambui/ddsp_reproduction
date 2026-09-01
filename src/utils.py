@@ -5,6 +5,7 @@ https://storage.googleapis.com/ddsp/index.html
 """
 
 import os
+from typing import Optional, Dict, List, Tuple
 import torch
 import numpy as np
 import soundfile as sf
@@ -41,10 +42,16 @@ def plot_spectrogram_comparison(
     target_audio: torch.Tensor,
     synth_audio: torch.Tensor,
     sample_rate: int = 16000,
-    title: str = "DDSP Audio Resynthesis Comparison",
-    save_path: str = None,
+    sr: Optional[int] = None,
+    title: str = "DDSP Audio Comparison",
+    title_a: Optional[str] = None,
+    title_b: Optional[str] = None,
+    save_path: Optional[str] = None,
 ):
     """Generates side-by-side linear-frequency log-magnitude spectrogram comparisons."""
+    if sr is not None:
+        sample_rate = sr
+
     if isinstance(target_audio, torch.Tensor):
         tgt = target_audio.detach().cpu().squeeze().numpy()
     else:
@@ -63,7 +70,7 @@ def plot_spectrogram_comparison(
     img1 = librosa.display.specshow(
         tgt_db, sr=sample_rate, hop_length=256, x_axis="time", y_axis="linear", ax=axes[0], cmap="magma"
     )
-    axes[0].set_title(f"Target Ground Truth Audio: {title}", fontweight="bold")
+    axes[0].set_title(title_a or f"Target Ground Truth Audio: {title}", fontweight="bold")
     axes[0].set_ylabel("Frequency (Hz)", fontweight="bold")
     axes[0].set_ylim(0, 8000)
     fig.colorbar(img1, ax=axes[0], format="%+2.0f dB")
@@ -71,7 +78,7 @@ def plot_spectrogram_comparison(
     img2 = librosa.display.specshow(
         syn_db, sr=sample_rate, hop_length=256, x_axis="time", y_axis="linear", ax=axes[1], cmap="magma"
     )
-    axes[1].set_title("DDSP Synthesized Audio", fontweight="bold")
+    axes[1].set_title(title_b or "DDSP Synthesized Audio", fontweight="bold")
     axes[1].set_ylabel("Frequency (Hz)", fontweight="bold")
     axes[1].set_xlabel("Time (seconds)", fontweight="bold")
     axes[1].set_ylim(0, 8000)
@@ -84,23 +91,59 @@ def plot_spectrogram_comparison(
     return fig
 
 
-def plot_modular_decomposition_grid(decomp_dict: dict, sample_rate: int = 16000, save_path: str = None):
+def plot_modular_decomposition_grid(
+    decomp_dict: Optional[dict] = None,
+    original_audio: Optional[np.ndarray] = None,
+    full_synth: Optional[np.ndarray] = None,
+    harmonic_synth: Optional[np.ndarray] = None,
+    noise_synth: Optional[np.ndarray] = None,
+    dry_synth: Optional[np.ndarray] = None,
+    f0: Optional[np.ndarray] = None,
+    loudness: Optional[np.ndarray] = None,
+    sample_rate: int = 16000,
+    title: str = "DDSP Modular Decomposition of Audio",
+    save_path: Optional[str] = None,
+):
     """
     Plots the 5-panel Modular Audio Decomposition spectrograms matching:
     https://storage.googleapis.com/ddsp/index.html#modular
     (Original, Resynthesis, Anechoic Dry, Harmonic Only, Filtered Noise Only)
     """
+    # Build dictionary from args if not provided directly
+    if decomp_dict is None:
+        decomp_dict = {}
+    if original_audio is not None:
+        decomp_dict["original"] = original_audio
+    if full_synth is not None:
+        decomp_dict["full_synth"] = full_synth
+    if dry_synth is not None:
+        decomp_dict["dry_synth"] = dry_synth
+    elif "dry_synth" not in decomp_dict and harmonic_synth is not None and noise_synth is not None:
+        decomp_dict["dry_synth"] = harmonic_synth + noise_synth
+    if harmonic_synth is not None:
+        decomp_dict["harmonic_synth"] = harmonic_synth
+    if noise_synth is not None:
+        decomp_dict["noise_synth"] = noise_synth
+
     keys = [
-        ("original", "Original Target Recording"),
+        ("original", "Target Audio Recording"),
         ("full_synth", "Full DDSP Resynthesis (Harmonic + Noise + Reverb)"),
         ("dry_synth", "Anechoic Dry Audio (Reverb Bypassed)"),
         ("harmonic_synth", "Harmonic Additive Synthesizer (Sinusoidal Bank)"),
         ("noise_synth", "Filtered Noise Synthesizer (Friction / Transients)"),
     ]
 
-    fig, axes = plt.subplots(5, 1, figsize=(12, 11), sharex=True)
+    # Filter keys that exist in decomp_dict
+    active_keys = [k for k in keys if k[0] in decomp_dict and decomp_dict[k[0]] is not None]
+    if not active_keys:
+        print("Warning: No audio streams found to plot in plot_modular_decomposition_grid.")
+        return None
 
-    for i, (k, label) in enumerate(keys):
+    fig, axes = plt.subplots(len(active_keys), 1, figsize=(12, 2.3 * len(active_keys)), sharex=True)
+    if len(active_keys) == 1:
+        axes = [axes]
+
+    for i, (k, label) in enumerate(active_keys):
         audio = decomp_dict[k]
         spec_db = compute_linear_log_mag_spectrogram(audio)
         img = librosa.display.specshow(
@@ -112,7 +155,7 @@ def plot_modular_decomposition_grid(decomp_dict: dict, sample_rate: int = 16000,
         fig.colorbar(img, ax=axes[i], format="%+2.0f dB")
 
     axes[-1].set_xlabel("Time (seconds)", fontweight="bold", fontsize=10)
-    plt.suptitle("DDSP Modular Decomposition of Audio (Linear-Frequency Log-Magnitude)", fontweight="bold", fontsize=13)
+    plt.suptitle(title, fontweight="bold", fontsize=13)
     plt.tight_layout()
 
     if save_path:

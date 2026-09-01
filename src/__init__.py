@@ -10,8 +10,9 @@ from .data import (
     AudioFeatureExtractor,
     MonophonicAudioDataset,
     create_dataloader,
-    setup_all_datasets,
+    load_audio_file,
 )
+from .download_datasets import download_and_setup_datasets
 from .metrics import DDPSEvaluator
 from .baselines import ClassicalSourceFilterVocoder, HarmonicOnlyDDSP, NoiseOnlyDDSP
 from .experiments import (
@@ -37,7 +38,8 @@ __all__ = [
     "AudioFeatureExtractor",
     "MonophonicAudioDataset",
     "create_dataloader",
-    "setup_all_datasets",
+    "load_audio_file",
+    "download_and_setup_datasets",
     "DDPSEvaluator",
     "ClassicalSourceFilterVocoder",
     "HarmonicOnlyDDSP",

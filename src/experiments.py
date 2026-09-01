@@ -112,9 +112,14 @@ def run_dereverberation_and_acoustic_transfer(
 
     return {
         "original_instrument": c_inst,
+        "dereverberated_instrument": anechoic_dry_instrument,
         "anechoic_instrument": anechoic_dry_instrument,
+        "dry_instrument": anechoic_dry_instrument,
+        "dry_voice_original": c_voice,
         "dry_voice": c_voice,
+        "voice_with_transferred_reverb": reverberant_voice,
         "reverberant_transferred_voice": reverberant_voice,
+        "transferred_voice": reverberant_voice,
     }
 
 

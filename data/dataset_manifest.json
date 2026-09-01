@@ -1,0 +1,134 @@
+{
+  "dataset_name": "DDSP Multi-Instrument & Speech Corpus",
+  "sample_rate": 16000,
+  "sources": [
+    "ESC-50: Dataset for Environmental Sound Classification (Piczak, ACM MM 2015)",
+    "Free Spoken Digit Dataset - FSDD (Jackson et al., 2018)",
+    "HuggingFace Audio Benchmarks (2022)"
+  ],
+  "categories": {
+    "instrument_train": {
+      "name": "instrument_train",
+      "total_files": 3,
+      "size_mb": 0.6718482971191406
+    },
+    "singing_voice": {
+      "name": "singing_voice",
+      "total_files": 2,
+      "size_mb": 0.35485076904296875
+    },
+    "test_inputs": {
+      "name": "test_inputs",
+      "total_files": 1,
+      "size_mb": 0.09998703002929688
+    },
+    "speech_corpus": {
+      "name": "speech_corpus",
+      "total_files": 4,
+      "size_mb": 0.050388336181640625
+    }
+  },
+  "files": [
+    {
+      "instrument": "Solo Flute / Woodwind",
+      "category": "instrument_train",
+      "filename": "flute_solo_01.wav",
+      "path": "data\\instrument_train\\flute_solo_01.wav",
+      "duration_sec": 6.58,
+      "size_mb": 0.201,
+      "sample_rate": 16000,
+      "citation": "ESC-50 Dataset (Piczak, ACM MM 2015) / HuggingFace Corpus"
+    },
+    {
+      "instrument": "Acoustic Whistling & Air Resonances",
+      "category": "instrument_train",
+      "filename": "whistle_melody_01.wav",
+      "path": "data\\instrument_train\\whistle_melody_01.wav",
+      "duration_sec": 5.0,
+      "size_mb": 0.153,
+      "sample_rate": 16000,
+      "citation": "ESC-50 Acoustic Corpus (Piczak, ACM MM 2015)"
+    },
+    {
+      "instrument": "Acoustic Instrumental Resonance",
+      "category": "instrument_train",
+      "filename": "instrumental_01.wav",
+      "path": "data\\instrument_train\\instrumental_01.wav",
+      "duration_sec": 10.44,
+      "size_mb": 0.318,
+      "sample_rate": 16000,
+      "citation": "HuggingFace Audio Corpus (2022)"
+    },
+    {
+      "instrument": "Human Vocal Inflections (Voiced)",
+      "category": "singing_voice",
+      "filename": "vocal_melody_01.wav",
+      "path": "data\\singing_voice\\vocal_melody_01.wav",
+      "duration_sec": 5.0,
+      "size_mb": 0.153,
+      "sample_rate": 16000,
+      "citation": "ESC-50 Vocal Corpus (Piczak, ACM MM 2015)"
+    },
+    {
+      "instrument": "Singing Voice & Pitch Trajectory",
+      "category": "singing_voice",
+      "filename": "singing_voice_02.wav",
+      "path": "data\\singing_voice\\singing_voice_02.wav",
+      "duration_sec": 6.62,
+      "size_mb": 0.202,
+      "sample_rate": 16000,
+      "citation": "HuggingFace Audio Corpus (Narsil, 2022)"
+    },
+    {
+      "instrument": "Target Vocal Humming (Timbre Transfer)",
+      "category": "test_inputs",
+      "filename": "hummed_voice_input.wav",
+      "path": "data\\test_inputs\\hummed_voice_input.wav",
+      "duration_sec": 3.27,
+      "size_mb": 0.1,
+      "sample_rate": 16000,
+      "citation": "HuggingFace Audio Corpus (Narsil, 2022)"
+    },
+    {
+      "instrument": "Speech Recording (Speaker Jackson, Male)",
+      "category": "speech_corpus",
+      "filename": "speech_speaker1_01.wav",
+      "path": "data\\speech_corpus\\speech_speaker1_01.wav",
+      "duration_sec": 0.64,
+      "size_mb": 0.02,
+      "sample_rate": 16000,
+      "citation": "Free Spoken Digit Dataset - FSDD (Jackson et al., 2018)"
+    },
+    {
+      "instrument": "Speech Recording (Speaker Nicolas, Male)",
+      "category": "speech_corpus",
+      "filename": "speech_speaker2_01.wav",
+      "path": "data\\speech_corpus\\speech_speaker2_01.wav",
+      "duration_sec": 0.37,
+      "size_mb": 0.011,
+      "sample_rate": 16000,
+      "citation": "Free Spoken Digit Dataset - FSDD (Jackson et al., 2018)"
+    },
+    {
+      "instrument": "Speech Recording (Speaker Theo, Male)",
+      "category": "speech_corpus",
+      "filename": "speech_speaker3_01.wav",
+      "path": "data\\speech_corpus\\speech_speaker3_01.wav",
+      "duration_sec": 0.24,
+      "size_mb": 0.007,
+      "sample_rate": 16000,
+      "citation": "Free Spoken Digit Dataset - FSDD (Jackson et al., 2018)"
+    },
+    {
+      "instrument": "Speech Recording (Speaker Yweweler, Female)",
+      "category": "speech_corpus",
+      "filename": "speech_speaker4_01.wav",
+      "path": "data\\speech_corpus\\speech_speaker4_01.wav",
+      "duration_sec": 0.39,
+      "size_mb": 0.012,
+      "sample_rate": 16000,
+      "citation": "Free Spoken Digit Dataset - FSDD (Jackson et al., 2018)"
+    }
+  ],
+  "total_size_mb": 1.177
+}
