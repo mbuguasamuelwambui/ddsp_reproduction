@@ -45,13 +45,16 @@ class SingleScaleSpectralLoss(nn.Module):
         target_audio = target_audio[..., :min_len]
         pred_audio = pred_audio[..., :min_len]
 
+        # Ensure window is on the same device and dtype as the audio
+        window = self.window.to(device=target_audio.device, dtype=target_audio.dtype)
+
         # Compute STFT magnitudes
         target_stft = torch.stft(
             target_audio,
             n_fft=self.n_fft,
             hop_length=self.hop_length,
             win_length=self.win_length,
-            window=self.window,
+            window=window,
             return_complex=True,
         )
         pred_stft = torch.stft(
@@ -59,7 +62,7 @@ class SingleScaleSpectralLoss(nn.Module):
             n_fft=self.n_fft,
             hop_length=self.hop_length,
             win_length=self.win_length,
-            window=self.window,
+            window=window,
             return_complex=True,
         )
 

@@ -133,12 +133,13 @@ class FilteredNoiseSynthesizer(nn.Module):
         )
 
         # 2. Compute STFT of the white noise
+        window = self.window.to(device=noise.device, dtype=noise.dtype)
         noise_stft = torch.stft(
             noise,
             n_fft=self.n_fft,
             hop_length=self.hop_length,
             win_length=self.win_length,
-            window=self.window,
+            window=window,
             return_complex=True,
         )  # [B, n_filter_banks, T_stft]
 
@@ -159,7 +160,7 @@ class FilteredNoiseSynthesizer(nn.Module):
             n_fft=self.n_fft,
             hop_length=self.hop_length,
             win_length=self.win_length,
-            window=self.window,
+            window=window,
             length=target_samples,
         )
 
