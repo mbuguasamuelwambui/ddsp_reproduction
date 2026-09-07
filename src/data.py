@@ -10,7 +10,6 @@ from typing import List, Tuple, Optional
 import numpy as np
 import soundfile as sf
 import librosa
-import scipy.signal
 import torch
 from torch.utils.data import Dataset, DataLoader
 
